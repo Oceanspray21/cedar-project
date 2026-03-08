@@ -3,12 +3,10 @@
 import { useState, useRef } from 'react'
 import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { type VoxelMap } from '@/lib/voxelStore'
 import { snapToFloor, getAdjacentPosition } from '@/lib/raycasting'
 import { type Tool } from '@/app/page'
 
 type Props = {
-  voxels: VoxelMap
   tool: Tool
   instanceMeshRef: React.RefObject<THREE.InstancedMesh | null>
 }
@@ -16,7 +14,7 @@ type Props = {
 const PLACE_COLOR = '#FF6B35'
 const ERASE_COLOR = '#FF3535'
 
-export default function GhostVoxel({ voxels, tool, instanceMeshRef }: Props) {
+export default function GhostVoxel({ tool, instanceMeshRef }: Props) {
   const { camera, raycaster, pointer } = useThree()
   const floorRef = useRef<THREE.Mesh>(null)
   const [ghostPos, setGhostPos] = useState<{ x: number; y: number; z: number } | null>(null)

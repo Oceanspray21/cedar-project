@@ -20,7 +20,7 @@ describe('pushCommand', () => {
 
   test('clears the future stack on new action', () => {
     // Simulate: add A, undo, then push a new command
-    let h = pushCommand(emptyHistory, { type: 'add', voxel: voxelA })
+    const h = pushCommand(emptyHistory, { type: 'add', voxel: voxelA })
     const map = addVoxel(empty, voxelA)
     const { history: undone } = undo(h, map)
     expect(undone.future).toHaveLength(1)
