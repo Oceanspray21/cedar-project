@@ -2,6 +2,17 @@
 
 import { type Tool } from '@/app/page'
 
+const btnStyle = {
+  background: '#2A2A2A',
+  border: 'none',
+  borderRadius: 4,
+  color: '#666',
+  width: 24,
+  height: 24,
+  fontSize: 10,
+  cursor: 'pointer' as const,
+}
+
 const PALETTE = [
   '#FF6B35', // Cedar orange (default)
   '#FFFFFF', // White
@@ -34,6 +45,10 @@ type Props = {
   onRedo: () => void
   onClear: () => void
   onCycleGridSize: () => void
+  showColors?: boolean
+  showToolbar?: boolean
+  onToggleColors?: () => void
+  onToggleToolbar?: () => void
 }
 
 export default function Toolbar({
@@ -49,6 +64,10 @@ export default function Toolbar({
   onRedo,
   onClear,
   onCycleGridSize,
+  showColors = true,
+  showToolbar = true,
+  onToggleColors,
+  onToggleToolbar,
 }: Props) {
   return (
     <div
@@ -63,6 +82,7 @@ export default function Toolbar({
       }}
     >
       {/* Left panel — color palette */}
+      {showColors ? (
       <div
         style={{
           position: 'absolute',
@@ -80,9 +100,13 @@ export default function Toolbar({
           userSelect: 'none',
         }}
       >
-        {/* Section label */}
-        <div style={{ color: '#666', fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }}>
-          Color
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+          <span style={{ color: '#666', fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }}>
+            Color
+          </span>
+          {onToggleColors && (
+            <button onClick={onToggleColors} title="Hide colors" style={btnStyle}>◀</button>
+          )}
         </div>
 
         {/* Preset swatches 4×4 */}
@@ -129,8 +153,38 @@ export default function Toolbar({
           />
         </div>
       </div>
+      ) : onToggleColors ? (
+        <button
+          onClick={onToggleColors}
+          title="Show colors"
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            writingMode: 'vertical-rl',
+            textOrientation: 'mixed',
+            padding: '12px 8px',
+            background: '#1A1A1A',
+            border: '1px solid #333',
+            borderLeft: 'none',
+            borderTopRightRadius: 8,
+            borderBottomRightRadius: 8,
+            color: '#FF6B35',
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: 1,
+            cursor: 'pointer',
+            pointerEvents: 'auto',
+            zIndex: 10,
+          }}
+        >
+          COLOR ▶
+        </button>
+      ) : null}
 
       {/* Top bar — tools + undo/redo + count */}
+      {showToolbar ? (
       <div
         style={{
           position: 'absolute',
@@ -193,6 +247,26 @@ export default function Toolbar({
           }}
         >
           ✕ ERASE
+        </button>
+
+        {/* Paint tool */}
+        <button
+          onClick={() => onToolChange('paint')}
+          title="Paint (P) - click block to recolor"
+          style={{
+            background: tool === 'paint' ? '#33AAFF' : '#2A2A2A',
+            color: tool === 'paint' ? '#000' : '#999',
+            border: 'none',
+            borderRadius: 6,
+            padding: '5px 12px',
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontFamily: 'inherit',
+            letterSpacing: 0.5,
+          }}
+        >
+          🎨 PAINT
         </button>
 
         <div style={{ width: 1, height: 20, background: '#333' }} />
@@ -286,9 +360,44 @@ export default function Toolbar({
         >
           GRID {gridSize}×{gridSize}
         </button>
+        {/* Hide toolbar */}
+        {onToggleToolbar && (
+          <>
+            <div style={{ width: 1, height: 20, background: '#333' }} />
+            <button onClick={onToggleToolbar} title="Hide toolbar" style={{ ...btnStyle, padding: '5px 8px' }}>▲</button>
+          </>
+        )}
       </div>
+      ) : onToggleToolbar ? (
+        <button
+          onClick={onToggleToolbar}
+          title="Show toolbar"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            padding: '6px 16px',
+            background: '#1A1A1A',
+            border: '1px solid #333',
+            borderTop: 'none',
+            borderBottomLeftRadius: 8,
+            borderBottomRightRadius: 8,
+            color: '#FF6B35',
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: 1,
+            cursor: 'pointer',
+            pointerEvents: 'auto',
+            zIndex: 10,
+          }}
+        >
+          TOOLBAR ▼
+        </button>
+      ) : null}
 
-      {/* Bottom hint */}
+      {/* Bottom hint — only when toolbar visible */}
+      {showToolbar && (
       <div
         style={{
           position: 'absolute',
@@ -302,8 +411,9 @@ export default function Toolbar({
           whiteSpace: 'nowrap',
         }}
       >
-        Click place · Left-drag orbit · Right-drag pan · Scroll zoom
+        Build (B) · Erase (E) · Paint (P) · Orbit · Pan · Zoom
       </div>
+      )}
     </div>
   )
 }

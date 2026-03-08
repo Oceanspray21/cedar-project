@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { addVoxel, removeVoxel, type VoxelMap } from '@/lib/voxelStore'
+import { addVoxel, addVoxels, removeVoxel, type Voxel, type VoxelMap } from '@/lib/voxelStore'
 import {
   pushCommand,
   undo as historyUndo,
@@ -34,6 +34,18 @@ export function useVoxels() {
     })
   }, [])
 
+  const recolorVoxel = useCallback((x: number, y: number, z: number, newColor: string) => {
+    setState(prev => {
+      const existing = prev.voxels.get(`${x},${y},${z}` as `${number},${number},${number}`)
+      if (!existing || existing.color === newColor) return prev
+      const recolored = { ...existing, color: newColor }
+      return {
+        voxels: addVoxel(prev.voxels, recolored),
+        history: pushCommand(prev.history, { type: 'recolor', voxel: recolored, previousColor: existing.color }),
+      }
+    })
+  }, [])
+
   const undo = useCallback(() => {
     setState(prev => {
       const { history, voxels } = historyUndo(prev.history, prev.voxels)
@@ -52,10 +64,20 @@ export function useVoxels() {
     setState({ voxels: new Map(), history: emptyHistory })
   }, [])
 
+  const placeVoxels = useCallback((voxels: Voxel[]) => {
+    if (voxels.length === 0) return
+    setState(prev => ({
+      voxels: addVoxels(prev.voxels, voxels),
+      history: pushCommand(prev.history, { type: 'batch_add', voxels }),
+    }))
+  }, [])
+
   return {
     voxels: state.voxels,
     placeVoxel,
+    placeVoxels,
     eraseVoxel,
+    recolorVoxel,
     undo,
     redo,
     clearVoxels,

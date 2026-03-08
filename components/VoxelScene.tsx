@@ -11,11 +11,14 @@ type Props = {
   tool: Tool
   color: string
   gridSize: number
+  selectedPreset: string | null
   onPlace: (x: number, y: number, z: number, color: string) => void
+  onPlaceVoxels: (voxels: { x: number; y: number; z: number; color: string }[]) => void
   onErase: (x: number, y: number, z: number) => void
+  onRecolor: (x: number, y: number, z: number, color: string) => void
 }
 
-export default function VoxelScene({ voxels, tool, color, gridSize, onPlace, onErase }: Props) {
+export default function VoxelScene({ voxels, tool, color, gridSize, selectedPreset, onPlace, onPlaceVoxels, onErase, onRecolor }: Props) {
   return (
     <Canvas
       gl={{ antialias: true }}
@@ -53,8 +56,11 @@ export default function VoxelScene({ voxels, tool, color, gridSize, onPlace, onE
         tool={tool}
         color={color}
         gridSize={gridSize}
+        selectedPreset={selectedPreset}
         onPlace={onPlace}
+        onPlaceVoxels={onPlaceVoxels}
         onErase={onErase}
+        onRecolor={onRecolor}
       />
 
       <OrbitControls makeDefault enableDamping dampingFactor={0.05} />

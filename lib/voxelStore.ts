@@ -34,3 +34,11 @@ export function getVoxel(map: VoxelMap, x: number, y: number, z: number): Voxel 
 export function listVoxels(map: VoxelMap): Voxel[] {
   return Array.from(map.values())
 }
+
+export function addVoxels(map: VoxelMap, voxels: Voxel[]): VoxelMap {
+  let next = new Map(map)
+  for (const v of voxels) {
+    next = addVoxel(next, v)
+  }
+  return next
+}
