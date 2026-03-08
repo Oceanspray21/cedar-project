@@ -2,6 +2,8 @@
 
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Grid } from '@react-three/drei'
+import { EffectComposer, SSAO } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
 import SceneInteraction from './SceneInteraction'
 import { type VoxelMap } from '@/lib/voxelStore'
 import { type Tool } from '@/app/page'
@@ -64,6 +66,16 @@ export default function VoxelScene({ voxels, tool, color, gridSize, selectedPres
       />
 
       <OrbitControls makeDefault enableDamping dampingFactor={0.05} />
+
+      <EffectComposer>
+        <SSAO
+          blendFunction={BlendFunction.MULTIPLY}
+          samples={16}
+          radius={4}
+          intensity={25}
+          bias={0.03}
+        />
+      </EffectComposer>
     </Canvas>
   )
 }

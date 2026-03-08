@@ -50,8 +50,6 @@ export default function SceneInteraction({ voxels, tool, color, gridSize, select
     mesh.computeBoundingSphere()
   }, [voxels])
 
-  // --- Voxel mesh events ---
-  // R3F's onClick already guarantees this is a click not a drag — no extra isDrag needed.
   const onVoxelPointerDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation()
     pointerDownXY.current = { x: e.clientX, y: e.clientY }
@@ -104,7 +102,6 @@ export default function SceneInteraction({ voxels, tool, color, gridSize, select
   const onVoxelPointerLeave = useCallback(() => setGhostPos(null), [])
 
   // --- Floor events ---
-  // Use pointerDown + pointerUp to detect real clicks vs drags on the floor.
   const pointerDownXY = useRef({ x: 0, y: 0 })
 
   const onFloorPointerDown = (e: ThreeEvent<PointerEvent>) => {

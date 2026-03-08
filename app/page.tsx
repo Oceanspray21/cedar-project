@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import VoxelScene from '@/components/VoxelScene'
 import Toolbar from '@/components/Toolbar'
 import GeneratePanel from '@/components/GeneratePanel'
+import WelcomeOverlay from '@/components/WelcomeOverlay'
 import { useVoxels } from '@/hooks/useVoxels'
 
 export type Tool = 'place' | 'erase' | 'paint'
@@ -49,6 +50,7 @@ export default function Home() {
 
   return (
     <main style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#000', position: 'relative' }}>
+      <WelcomeOverlay />
       <VoxelScene
         voxels={voxels}
         tool={tool}
