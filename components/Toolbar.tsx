@@ -49,6 +49,7 @@ type Props = {
   showToolbar?: boolean
   onToggleColors?: () => void
   onToggleToolbar?: () => void
+  onOpenInfo?: () => void
 }
 
 export default function Toolbar({
@@ -68,6 +69,7 @@ export default function Toolbar({
   showToolbar = true,
   onToggleColors,
   onToggleToolbar,
+  onOpenInfo,
 }: Props) {
   return (
     <div
@@ -206,6 +208,28 @@ export default function Toolbar({
         <span style={{ color: '#FF6B35', fontWeight: 700, fontSize: 13, letterSpacing: 0.5, marginRight: 4 }}>
           VOXEL
         </span>
+
+        {/* Info */}
+        {onOpenInfo && (
+          <button
+            onClick={onOpenInfo}
+            title="Info — Why me & thought process"
+            style={{
+              background: '#2A2A2A',
+              color: '#888',
+              border: 'none',
+              borderRadius: 6,
+              padding: '5px 10px',
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              letterSpacing: 0.5,
+            }}
+          >
+            ℹ INFO
+          </button>
+        )}
 
         <div style={{ width: 1, height: 20, background: '#333' }} />
 
@@ -369,31 +393,50 @@ export default function Toolbar({
         )}
       </div>
       ) : onToggleToolbar ? (
-        <button
-          onClick={onToggleToolbar}
-          title="Show toolbar"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            padding: '6px 16px',
-            background: '#1A1A1A',
-            border: '1px solid #333',
-            borderTop: 'none',
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
-            color: '#FF6B35',
-            fontSize: 10,
-            fontWeight: 700,
-            letterSpacing: 1,
-            cursor: 'pointer',
-            pointerEvents: 'auto',
-            zIndex: 10,
-          }}
-        >
-          TOOLBAR ▼
-        </button>
+        <div style={{ display: 'flex', gap: 8, position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', zIndex: 10, pointerEvents: 'auto' }}>
+          {onOpenInfo && (
+            <button
+              onClick={onOpenInfo}
+              title="Info"
+              style={{
+                padding: '6px 12px',
+                background: '#1A1A1A',
+                border: '1px solid #333',
+                borderTop: 'none',
+                borderBottomLeftRadius: 8,
+                borderBottomRightRadius: 8,
+                color: '#FF6B35',
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: 1,
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              ℹ INFO
+            </button>
+          )}
+          <button
+            onClick={onToggleToolbar}
+            title="Show toolbar"
+            style={{
+              padding: '6px 16px',
+              background: '#1A1A1A',
+              border: '1px solid #333',
+              borderTop: 'none',
+              borderBottomLeftRadius: 8,
+              borderBottomRightRadius: 8,
+              color: '#FF6B35',
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: 1,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          >
+            TOOLBAR ▼
+          </button>
+        </div>
       ) : null}
 
       {/* Bottom hint — only when toolbar visible */}

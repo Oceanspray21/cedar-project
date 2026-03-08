@@ -18,6 +18,7 @@ type Props = {
 }
 
 export function useVoxelInteraction({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- voxels kept for API consistency
   voxels,
   tool,
   color,

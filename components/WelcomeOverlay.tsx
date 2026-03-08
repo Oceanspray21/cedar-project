@@ -23,7 +23,6 @@ const DROP_DURATION_MS = 280
 
 function getBlocksForPhrase(): { letterIndex: number; row: number; col: number }[] {
   const blocks: { letterIndex: number; row: number; col: number }[] = []
-  let xOffset = 0
   for (let li = 0; li < PHRASE.length; li++) {
     const char = PHRASE[li]
     const grid = BLOCK_FONT[char] ?? BLOCK_FONT[' ']
@@ -34,7 +33,6 @@ function getBlocksForPhrase(): { letterIndex: number; row: number; col: number }
         }
       }
     }
-    xOffset += (grid.length ? 6 : 3)
   }
   return blocks
 }

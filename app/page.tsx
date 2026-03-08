@@ -5,6 +5,7 @@ import VoxelScene from '@/components/VoxelScene'
 import Toolbar from '@/components/Toolbar'
 import GeneratePanel from '@/components/GeneratePanel'
 import WelcomeOverlay from '@/components/WelcomeOverlay'
+import InfoPanel from '@/components/InfoPanel'
 import { useVoxels } from '@/hooks/useVoxels'
 
 export type Tool = 'place' | 'erase' | 'paint'
@@ -20,6 +21,7 @@ export default function Home() {
   const [showShapes, setShowShapes] = useState(true)
   const [showColors, setShowColors] = useState(true)
   const [showToolbar, setShowToolbar] = useState(true)
+  const [showInfo, setShowInfo] = useState(false)
 
   const togglePreset = (presetId: string) => {
     const next = selectedPreset === presetId ? null : presetId
@@ -79,7 +81,9 @@ export default function Home() {
         showToolbar={showToolbar}
         onToggleColors={() => setShowColors(v => !v)}
         onToggleToolbar={() => setShowToolbar(v => !v)}
+        onOpenInfo={() => setShowInfo(true)}
       />
+      <InfoPanel open={showInfo} onClose={() => setShowInfo(false)} />
       <GeneratePanel
         selectedPreset={selectedPreset}
         onPresetSelect={togglePreset}

@@ -104,9 +104,11 @@ export default function SceneInteraction({ voxels, tool, color, gridSize, select
   // --- Floor events ---
   const pointerDownXY = useRef({ x: 0, y: 0 })
 
-  const onFloorPointerDown = (e: ThreeEvent<PointerEvent>) => {
+  const onFloorPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
+    // Ref mutation is intentional — storing pointer position for click-vs-drag detection
+    // eslint-disable-next-line react-hooks/immutability
     pointerDownXY.current = { x: e.clientX, y: e.clientY }
-  }
+  }, [])
 
   const onFloorPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
     if (tool !== 'place') return
@@ -178,11 +180,10 @@ export default function SceneInteraction({ voxels, tool, color, gridSize, select
         (showPresetGhost ? (
           <group>
             {presetVoxels!.map((v, i) => (
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               <mesh
                 key={i}
                 position={[ghostPos!.x + v.x, ghostPos!.y + v.y + 0.5, ghostPos!.z + v.z]}
-                raycast={() => null as any}
+                raycast={() => null as unknown as boolean}
               >
                 <boxGeometry args={[1.02, 1.02, 1.02]} />
                 <meshLambertMaterial color={v.color} transparent opacity={0.4} depthWrite={false} />
@@ -190,8 +191,7 @@ export default function SceneInteraction({ voxels, tool, color, gridSize, select
             ))}
           </group>
         ) : (
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          <mesh position={[ghostPos.x, ghostPos.y + 0.5, ghostPos.z]} raycast={() => null as any}>
+          <mesh position={[ghostPos.x, ghostPos.y + 0.5, ghostPos.z]} raycast={() => null as unknown as boolean}>
             <boxGeometry args={[1.02, 1.02, 1.02]} />
             <meshLambertMaterial color={ghostColor} transparent opacity={0.4} depthWrite={false} />
           </mesh>

@@ -37,6 +37,7 @@ export default function VoxelInstances({ voxels, meshRef }: Props) {
     mesh.count = voxels.size
     mesh.instanceMatrix.needsUpdate = true
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- meshRef is stable
   }, [voxels])
 
   return (
