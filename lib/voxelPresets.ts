@@ -95,8 +95,8 @@ export const PRESETS: Record<string, Voxel[]> = {
   ],
 }
 
-/** Preset IDs in display order */
-export const PRESET_IDS = ['tree', 'house', 'pyramid', 'tower', 'stairs', 'wall', 'platform', 'bridge', 'line', 'pillar'] as const
+/** Preset IDs in display order — house moved further down */
+export const PRESET_IDS = ['tree', 'pyramid', 'tower', 'stairs', 'wall', 'platform', 'bridge', 'line', 'pillar', 'house'] as const
 
 /** Apply a single color to a preset's voxels */
 export function presetWithColor(presetId: string, color: string): Voxel[] | null {

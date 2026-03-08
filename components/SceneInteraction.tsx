@@ -138,7 +138,7 @@ export default function SceneInteraction({ voxels, tool, color, gridSize, select
 
   const onFloorPointerLeave = useCallback(() => setGhostPos(null), [])
 
-  const ghostColor = tool === 'erase' ? '#FF3535' : tool === 'paint' ? color : '#FF6B35'
+  const ghostColor = tool === 'erase' ? '#FF3535' : color
   const presetVoxels = selectedPreset ? PRESETS[selectedPreset] : null
   const showPresetGhost = tool === 'place' && selectedPreset && ghostPos && presetVoxels?.length
 
