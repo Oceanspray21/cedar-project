@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Cedar brand colors */
+  --color-cedar-black: #000000;
+  --color-cedar-orange: #FF6B35;
+  --color-cedar-gray: #1A1A1A;
+  --color-cedar-gray-light: #2A2A2A;
+  --color-cedar-border: #333333;
+
+  --font-sans: var(--font-space-grotesk);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #111111;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+#__next {
+  width: 100%;
+  height: 100%;
+}
