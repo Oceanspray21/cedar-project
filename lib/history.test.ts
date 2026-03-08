@@ -1,10 +1,15 @@
 import { describe, test, expect } from 'vitest'
 import { pushCommand, undo, redo, emptyHistory, type History } from './history'
-import { addVoxel, type VoxelMap } from './voxelStore'
+import { addVoxel, addVoxels, type VoxelMap } from './voxelStore'
 
 const empty: VoxelMap = new Map()
 const voxelA = { x: 0, y: 0, z: 0, color: '#ff0000' }
 const voxelB = { x: 1, y: 0, z: 0, color: '#0000ff' }
+const voxelsBatch = [
+  { x: 0, y: 0, z: 0, color: '#fff' },
+  { x: 1, y: 0, z: 0, color: '#f00' },
+  { x: 0, y: 1, z: 0, color: '#0f0' },
+]
 
 describe('pushCommand', () => {
   test('adds command to past', () => {
@@ -95,6 +100,28 @@ describe('redo', () => {
     const { history, voxels } = redo(emptyHistory, map)
     expect(history).toEqual(emptyHistory)
     expect(voxels.size).toBe(1)
+  })
+
+  test('recolor: undo restores previous color, redo reapplies', () => {
+    const voxelOrig = { x: 0, y: 0, z: 0, color: '#ff0000' }
+    const voxelNew = { x: 0, y: 0, z: 0, color: '#00ff00' }
+    let h = pushCommand(emptyHistory, { type: 'recolor', voxel: voxelNew, previousColor: voxelOrig.color })
+    let map = addVoxel(empty, voxelNew)
+    expect(map.get('0,0,0')?.color).toBe('#00ff00')
+    ;({ history: h, voxels: map } = undo(h, map))
+    expect(map.get('0,0,0')?.color).toBe('#ff0000')
+    ;({ history: h, voxels: map } = redo(h, map))
+    expect(map.get('0,0,0')?.color).toBe('#00ff00')
+  })
+
+  test('batch_add: undo removes all voxels, redo restores them', () => {
+    let h = pushCommand(emptyHistory, { type: 'batch_add', voxels: voxelsBatch })
+    let map = addVoxels(empty, voxelsBatch)
+    expect(map.size).toBe(3)
+    ;({ history: h, voxels: map } = undo(h, map))
+    expect(map.size).toBe(0)
+    ;({ history: h, voxels: map } = redo(h, map))
+    expect(map.size).toBe(3)
   })
 
   test('new action after undo clears future and prevents redo', () => {

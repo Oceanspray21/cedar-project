@@ -2,6 +2,8 @@
 
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Grid } from '@react-three/drei'
+import { EffectComposer, SSAO } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
 import SceneInteraction from './SceneInteraction'
 import { type VoxelMap } from '@/lib/voxelStore'
 import { type Tool } from '@/app/page'
@@ -11,11 +13,14 @@ type Props = {
   tool: Tool
   color: string
   gridSize: number
+  selectedPreset: string | null
   onPlace: (x: number, y: number, z: number, color: string) => void
+  onPlaceVoxels: (voxels: { x: number; y: number; z: number; color: string }[]) => void
   onErase: (x: number, y: number, z: number) => void
+  onRecolor: (x: number, y: number, z: number, color: string) => void
 }
 
-export default function VoxelScene({ voxels, tool, color, gridSize, onPlace, onErase }: Props) {
+export default function VoxelScene({ voxels, tool, color, gridSize, selectedPreset, onPlace, onPlaceVoxels, onErase, onRecolor }: Props) {
   return (
     <Canvas
       gl={{ antialias: true }}
@@ -53,11 +58,24 @@ export default function VoxelScene({ voxels, tool, color, gridSize, onPlace, onE
         tool={tool}
         color={color}
         gridSize={gridSize}
+        selectedPreset={selectedPreset}
         onPlace={onPlace}
+        onPlaceVoxels={onPlaceVoxels}
         onErase={onErase}
+        onRecolor={onRecolor}
       />
 
       <OrbitControls makeDefault enableDamping dampingFactor={0.05} />
+
+      <EffectComposer enableNormalPass>
+        <SSAO
+          blendFunction={BlendFunction.MULTIPLY}
+          samples={16}
+          radius={4}
+          intensity={25}
+          bias={0.03}
+        />
+      </EffectComposer>
     </Canvas>
   )
 }

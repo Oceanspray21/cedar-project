@@ -1,8 +1,10 @@
-import { addVoxel, removeVoxel, type Voxel, type VoxelMap } from './voxelStore'
+import { addVoxel, removeVoxel, addVoxels, type Voxel, type VoxelMap } from './voxelStore'
 
 export type Command =
   | { type: 'add'; voxel: Voxel }
   | { type: 'remove'; voxel: Voxel }
+  | { type: 'batch_add'; voxels: Voxel[] }
+  | { type: 'recolor'; voxel: Voxel; previousColor: string }
 
 export type History = {
   past: Command[]
@@ -29,10 +31,18 @@ export function undo(
 
   let newVoxels: VoxelMap
   if (command.type === 'add') {
-    // Undo an add → remove the voxel
     newVoxels = removeVoxel(voxels, command.voxel.x, command.voxel.y, command.voxel.z)
+  } else if (command.type === 'batch_add') {
+    newVoxels = command.voxels.reduce(
+      (map, v) => removeVoxel(map, v.x, v.y, v.z),
+      voxels
+    )
+  } else if (command.type === 'recolor') {
+    newVoxels = addVoxel(voxels, {
+      ...command.voxel,
+      color: command.previousColor,
+    })
   } else {
-    // Undo a remove → re-add the voxel
     newVoxels = addVoxel(voxels, command.voxel)
   }
 
@@ -53,6 +63,10 @@ export function redo(
 
   let newVoxels: VoxelMap
   if (command.type === 'add') {
+    newVoxels = addVoxel(voxels, command.voxel)
+  } else if (command.type === 'batch_add') {
+    newVoxels = addVoxels(voxels, command.voxels)
+  } else if (command.type === 'recolor') {
     newVoxels = addVoxel(voxels, command.voxel)
   } else {
     newVoxels = removeVoxel(voxels, command.voxel.x, command.voxel.y, command.voxel.z)
