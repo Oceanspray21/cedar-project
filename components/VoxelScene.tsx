@@ -67,7 +67,7 @@ export default function VoxelScene({ voxels, tool, color, gridSize, selectedPres
 
       <OrbitControls makeDefault enableDamping dampingFactor={0.05} />
 
-      <EffectComposer>
+      <EffectComposer enableNormalPass>
         <SSAO
           blendFunction={BlendFunction.MULTIPLY}
           samples={16}

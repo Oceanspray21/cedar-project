@@ -73,18 +73,21 @@ export default function WelcomeOverlay() {
     const grid = BLOCK_FONT[PHRASE[li]] ?? BLOCK_FONT[' ']
     letterX += grid.length ? 6 : 3
   }
-  const gridWidth = letterX * 8
-  const gridHeight = 5 * 8
+  const blockSize = 6
+  const gridWidth = letterX * blockSize
+  const gridHeight = 5 * blockSize
 
   return (
     <div
       className="welcome-overlay"
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 110,
+        left: 0,
+        right: 0,
         zIndex: 9999,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
         pointerEvents: 'none',
       }}
@@ -101,8 +104,8 @@ export default function WelcomeOverlay() {
           position: relative;
         }
         .welcome-block {
-          width: 8px;
-          height: 8px;
+          width: 6px;
+          height: 6px;
           background: #FF6B35;
           position: absolute;
           animation: blockDrop ${DROP_DURATION_MS}ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -115,9 +118,9 @@ export default function WelcomeOverlay() {
       <div className={`welcome-content ${phase === 'poof' ? 'poof' : ''}`}>
         <div className="welcome-letter-grid" style={{ width: gridWidth, height: gridHeight }}>
           {ALL_BLOCKS.map((b, i) => {
-            const baseX = letterOffsets[b.letterIndex] * 8
-            const left = baseX + b.col * 8
-            const top = b.row * 8
+            const baseX = letterOffsets[b.letterIndex] * blockSize
+            const left = baseX + b.col * blockSize
+            const top = b.row * blockSize
             const delay = b.letterIndex * LETTER_DELAY_MS
             return (
               <div
